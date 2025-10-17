@@ -8,7 +8,7 @@
         global $conn;
 
         // 1. Preparamos la consulta para evitar inyeccion de codigo en la BD
-        $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) values (?, ?, ?)"); 
+        $sql = $conn->prepare("INSERT INTO tareas (titulo, descripcion, fecha_caducidad) values (?, ?, ?)");
         
         // 2. Enlazamos los parámetros ("sss" = string, string, string), si fuera un entero "i" = integer
         $sql->bind_param("sss", $titulo, $descripcion, $fecha_caducidad);
@@ -25,9 +25,43 @@
 
     // Read
     function readTask(){
+    
+        global $conn;
+        // 1. Hacemos la consulta a la BD
+        $sql = $conn->query("SELECT * FROM tareas ORDER BY id DESC");
+        
+        // 2. Creamos un array para guardar las rows
+        $task = array();
+
+        // 3. Recorremos toda las rows de la consulta
+        while($row = $sql->fetch_assoc()){  // devolvemos un array asociativo
+            $task[] = $row;                 // Añadimos cada fila al array
+        }
+
+        // Retorna un array vacío si hay error en la consulta
+        if(!$sql) return [];
+
+        // 4. Devolvemos todas las tareas
+        return $task;
+    }
+
+    // Devuelve un array asociativo de la consulta o null sino existe
+    function getTaskById($id): ?array {
         global $conn;
 
+        // Hacemos la consulta a la BD
+        $sql = $conn->prepare("SELECT * FROM tareas WHERE id = ?");
+        $sql->bind_param("i",$id);
+        $sql->execute();
+
+        // Obtenemos los resultados y los guardamos en un array
+        $result = $sql->get_result();
+        $task = $result->fetch_assoc();
+
+        $sql->close();
+        return $task ?: null; // Devuelve la consulta o null si esta vacia
     }
+
     // Update
     function updateTask($id, $titulo, $descripcion, $fecha, $completada){
         global $conn;

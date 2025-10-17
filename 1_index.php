@@ -1,10 +1,23 @@
 <?php
     include("2_conexion.php");
-    $result = $conn->query("SELECT * FROM tareas ORDER BY id DESC");
+    // require_once("tareas_db");
+    // $result = $conn->query("SELECT * FROM tareas ORDER BY id DESC");
 
-    echo "Tareas \n";
-    $nombre = readline("Introduce un nombre: ");
+    function mostrarMenu() {
+        echo "\n=========================\n";
+        echo "📋 GESTOR DE TAREAS\n";
+        echo "=========================\n";
+        echo "1. Listar tareas\n";
+        echo "2. Crear nueva tarea\n";
+        echo "3. Editar tarea\n";
+        echo "4. Eliminar tarea\n";
+        echo "5. Salir\n";
+        echo "Seleccione una opción: ";
+    }
+    mostrarMenu();
 
-    echo "Tu nombre es: " . $nombre;
+
+
+
 
 ?>
